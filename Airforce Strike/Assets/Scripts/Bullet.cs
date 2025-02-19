@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        // Destroi a bala após o tempo de vida especificado
+        // Destroi a bala após o tempo de vida especifico
         Destroy(gameObject, lifetime);
     }
 
