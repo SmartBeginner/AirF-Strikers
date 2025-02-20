@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        // Destroi a bala após o tempo de vida especifico
+        // Destroi a bala apï¿½s o tempo de vida especifico
         Destroy(gameObject, lifetime);
     }
 
@@ -23,13 +23,13 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        // Move a bala na direção em que está apontando
+        // Move a bala na direï¿½ï¿½o em que estï¿½ apontando
         transform.Translate(Vector2.right * speed * Time.deltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Se colidir com qualquer coisa que não seja o jogador, destrói a bala
+        // Se colidir com qualquer coisa que nï¿½o seja o jogador, destrï¿½i a bala
         if (!collision.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);
