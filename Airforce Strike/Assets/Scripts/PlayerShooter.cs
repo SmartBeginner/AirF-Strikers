@@ -5,14 +5,23 @@ using UnityEngine;
 public class PlayerShooter : MonoBehaviour
 {
     [SerializeField]
-    private GameObject bulletPrefab;         // Prefab do projétil a ser disparado
+    private GameObject bulletPrefab;                // Prefab do projétil a ser disparado
     [SerializeField]
-    private float shootDelay = 0.5f;         // Delay entre cada disparo
+    private float shootDelay = 0.5f;                // Delay entre cada disparo
     [SerializeField]
-    private float bulletSpeed = 10f;         // Velocidade do projétil
+    private float bulletSpeed = 10f;                // Velocidade do projétil
+    [SerializeField] private int maxHp = 3;         // Vida máxima
+    [SerializeField] private HealthBar healthBar;   // Referência à barra de vida                     
+    private bool isShooting = false;                // Indica se o jogador está disparando
+    private float shootTimer = 0f;                  // Temporizador para controlar o delay entre disparos
 
-    private bool isShooting = false;         // Indica se o jogador está disparando
-    private float shootTimer = 0f;           // Temporizador para controlar o delay entre disparos
+    private int hp;
+
+    private void Start()
+    {
+        hp = maxHp;
+        healthBar.UpdateHealthBar(hp, maxHp);
+    }
 
     private void Update()
     {
@@ -50,6 +59,21 @@ public class PlayerShooter : MonoBehaviour
         if (bulletScript != null)
         {
             bulletScript.SetSpeed(bulletSpeed);  // Configura a velocidade da bala
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        // Se colidir com um objeto da tag "Enemy Bullet", destrói o player
+        if (other.CompareTag("Enemy Bullet"))
+        {
+            hp--;
+            healthBar.UpdateHealthBar(hp, maxHp);
+            if (hp <= 0)
+            {
+                Destroy(gameObject); // Destroi o player
+            }
+            Destroy(other.gameObject); // Destroi a bala também
         }
     }
 }

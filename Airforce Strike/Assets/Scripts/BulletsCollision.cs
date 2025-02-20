@@ -2,8 +2,12 @@ using UnityEngine;
 
 public class DroneAI : MonoBehaviour
 {
-    private Transform player;
+    [SerializeField] private Transform player;
     [SerializeField] private float moveSpeed = 2f; // Velocidade dos drones
+    [SerializeField] private float stopDistance = 3f; // Distância mínima para parar
+    [SerializeField] private float evadeDistance = 1.5f; // Distância para tentar desviar
+    [SerializeField] private float separationDistance = 1f; // Distância mínima entre drones
+    [SerializeField] private LayerMask enemyLayer; // Camada dos inimigos
 
     public void SetTarget(Transform playerTarget)
     {
@@ -14,20 +18,43 @@ public class DroneAI : MonoBehaviour
     {
         if (player == null) return;
 
-        // Movimenta e rotaciona o drone em direção ao jogador
         Vector3 direction = (player.position - transform.position).normalized;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer > stopDistance)
+        {
+            transform.position += direction * moveSpeed * Time.deltaTime;
+        }
+        else if (distanceToPlayer < evadeDistance)
+        {
+            transform.position -= direction * moveSpeed * Time.deltaTime;
+        }
+
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
-        transform.position += direction * moveSpeed * Time.deltaTime;
+
+        AvoidOtherDrones();
+    }
+
+    void AvoidOtherDrones()
+    {
+        Collider2D[] nearbyDrones = Physics2D.OverlapCircleAll(transform.position, separationDistance, enemyLayer);
+        foreach (Collider2D drone in nearbyDrones)
+        {
+            if (drone.transform != transform)
+            {
+                Vector3 avoidDirection = (transform.position - drone.transform.position).normalized;
+                transform.position += avoidDirection * moveSpeed * Time.deltaTime;
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Se colidir com um objeto da tag "Bala", destrói o drone
         if (other.CompareTag("Bullet"))
         {
-            Destroy(gameObject); // Destroi o drone
-            Destroy(other.gameObject); // Destroi a bala também
+            Destroy(gameObject);
+            Destroy(other.gameObject);
         }
     }
 }
