@@ -5,16 +5,24 @@ using UnityEngine;
 public class PlayerShooter : MonoBehaviour
 {
     [SerializeField]
-    private GameObject bulletPrefab;                // Prefab do projétil a ser disparado
+    private GameObject bulletPrefab;
     [SerializeField]
-    private float shootDelay = 0.5f;                // Delay entre cada disparo
+    private GameObject misslePrefab;
     [SerializeField]
-    private float bulletSpeed = 10f;                // Velocidade do projétil
-    [SerializeField] private int maxHp = 3;         // Vida máxima
-    [SerializeField] private HealthBar healthBar;   // Referência à barra de vida                     
-    private bool isShooting = false;                // Indica se o jogador está disparando
-    private float shootTimer = 0f;                  // Temporizador para controlar o delay entre disparos
+    private float shootDelay = 0.5f;
+    [SerializeField]
+    private float missleDelay = 10.0f;
+    [SerializeField]
+    private float bulletSpeed = 10f;
+    [SerializeField]
+    private float missleSpeed = 15f;
+    [SerializeField] private int maxHp = 3;
+    [SerializeField] private HealthBar healthBar;
 
+    private bool isShooting = false;
+    private float shootTimer = 0f;
+
+    private float lastMissleTime = -10f;
     private int hp;
 
     private void Start()
@@ -25,7 +33,6 @@ public class PlayerShooter : MonoBehaviour
 
     private void Update()
     {
-        // Verifica se a tecla "L" está pressionada para iniciar ou parar o disparo
         if (Input.GetKeyDown(KeyCode.L))
         {
             ShootBullet();
@@ -36,44 +43,54 @@ public class PlayerShooter : MonoBehaviour
             isShooting = false;
         }
 
-        // Controla o temporizador e dispara projéteis enquanto a tecla "L" está pressionada
+        if (Input.GetKeyDown(KeyCode.K) && Time.time - lastMissleTime >= missleDelay)
+        {
+            ShootMissle();
+            lastMissleTime = Time.time;
+        }
+
         if (isShooting)
         {
             shootTimer += Time.deltaTime;
             if (shootTimer >= shootDelay)
             {
                 ShootBullet();
-                shootTimer = 0f; // Reseta o temporizador após cada disparo
+                shootTimer = 0f;
             }
         }
     }
 
-    // Função responsável por instanciar o projétil e aplicá-lo na direção desejada
     private void ShootBullet()
     {
-        // Instancia o projétil na posição do jogador e com sua rotação atual
         GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-
-        // Define a velocidade da bala ao instanciar
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
-            bulletScript.SetSpeed(bulletSpeed);  // Configura a velocidade da bala
+            bulletScript.SetSpeed(bulletSpeed);
+        }
+    }
+
+    private void ShootMissle()
+    {
+        GameObject missle = Instantiate(misslePrefab, transform.position, transform.rotation);
+        Missile missleScript = missle.GetComponent<Missile>();
+        if (missleScript != null)
+        {
+            missleScript.SetSpeed(missleSpeed);
         }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Se colidir com um objeto da tag "Enemy Bullet", destrói o player
-        if (other.CompareTag("Enemy Bullet"))
+        if (other.CompareTag("Enmy Bullet"))
         {
             hp--;
             healthBar.UpdateHealthBar(hp, maxHp);
             if (hp <= 0)
             {
-                Destroy(gameObject); // Destroi o player
+                Destroy(gameObject);
             }
-            Destroy(other.gameObject); // Destroi a bala também
+            Destroy(other.gameObject);
         }
     }
 }
