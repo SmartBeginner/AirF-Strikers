@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1475610692}
+  enemyLife: 3
   moveSpeed: 6
   stopDistance: 8
   evadeDistance: 6
@@ -747,8 +748,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dronePrefab: {fileID: 188164799}
   player: {fileID: 1475610692}
-  droneCount: 10
   spawnRadius: 20
+  timeBetweenWaves: 5
+  initialDroneCount: 3
+  difficultyMultiplier: 1.5
 --- !u!4 &644809962
 Transform:
   m_ObjectHideFlags: 0
@@ -942,7 +945,7 @@ MonoBehaviour:
   missleDelay: 10
   bulletSpeed: 60
   missleSpeed: 30
-  maxHp: 3
+  maxHp: 5
   healthBar: {fileID: 1562435850}
 --- !u!68 &1475610696
 EdgeCollider2D:
@@ -1194,7 +1197,7 @@ Transform:
   m_GameObject: {fileID: 2010826162}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 652.7547}
+  m_LocalPosition: {x: 0.003, y: 0.04, z: 652.7547}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

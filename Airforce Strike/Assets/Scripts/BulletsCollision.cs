@@ -1,17 +1,43 @@
 using UnityEngine;
+using System;
+
 
 public class DroneAI : MonoBehaviour
 {
+    public event Action<GameObject> OnDroneDeath;
+    public bool isSpawnerDrone = false; // ✅ Definir no inspetor para o drone inicial
     [SerializeField] private Transform player;
+    [SerializeField] private int enemyLife = 3; //vida dos drones
     [SerializeField] private float moveSpeed = 2f; // Velocidade dos drones
     [SerializeField] private float stopDistance = 3f; // Distância mínima para parar
     [SerializeField] private float evadeDistance = 1.5f; // Distância para tentar desviar
     [SerializeField] private float separationDistance = 1f; // Distância mínima entre drones
     [SerializeField] private LayerMask enemyLayer; // Camada dos inimigos
 
+
+    void Start(){
+        if (isSpawnerDrone)
+        {
+            // Invisível e intangível
+            Renderer rend = GetComponent<Renderer>();
+            if (rend != null) rend.enabled = false;
+
+            Collider2D col2D = GetComponent<Collider2D>();
+            if (col2D != null) col2D.enabled = false;
+
+            Collider col = GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+        }
+    }
     public void SetTarget(Transform playerTarget)
     {
         player = playerTarget;
+    }
+
+    void Die()
+    {
+        OnDroneDeath?.Invoke(gameObject); // Notifica o Spawner
+        Destroy(gameObject); // Destroi o drone
     }
 
     void Update()
@@ -53,8 +79,11 @@ public class DroneAI : MonoBehaviour
     {
         if (other.CompareTag("Bullet") || other.CompareTag("Missile"))
         {
-            Destroy(gameObject);
             Destroy(other.gameObject);
+            enemyLife -= 1;
+            if(enemyLife <= 0){
+                Die();
+            }
         }
     }
 }
