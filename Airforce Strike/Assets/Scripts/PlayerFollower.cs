@@ -5,24 +5,24 @@ using UnityEngine;
 public class PlayerFollower : MonoBehaviour
 {
     [SerializeField]
-    private float maxSpeed = 10f;             // Velocidade máxima do jogador
+    private float maxSpeed = 10f;             // Velocidade mï¿½xima do jogador
     [SerializeField]
-    private float acceleration = 5f;          // Aceleração ao apertar "W"
+    private float acceleration = 5f;          // Aceleraï¿½ï¿½o ao apertar "W"
     [SerializeField]
-    private float deceleration = 5f;          // Desaceleração quando "W" não está pressionado
+    private float deceleration = 5f;          // Desaceleraï¿½ï¿½o quando "W" nï¿½o estï¿½ pressionado
     [SerializeField]
-    private float rotationSpeed = 100f;       // Velocidade de rotação do jogador
+    private float rotationSpeed = 100f;       // Velocidade de rotaï¿½ï¿½o do jogador
     [SerializeField]
     private float gravity = 2f;               // Intensidade da gravidade personalizada
     [SerializeField]
-    private float customDecelerationSpeed = 2f;  // Velocidade de desaceleração personalizada
+    private float customDecelerationSpeed = 2f;  // Velocidade de desaceleraï¿½ï¿½o personalizada
 
     public Rigidbody2D rb;
     private float currentSpeed = 0f;          // Velocidade atual do jogador
-    private bool isGrounded = false;          // Checa se o jogador está em contato com o solo
+    private bool isGrounded = false;          // Checa se o jogador estï¿½ em contato com o solo
     private Vector2 gravityVelocity;          // Armazena a velocidade da gravidade aplicada
-    private float lastRotation;               // Armazena o último ângulo de rotação
-    private bool isDecelerating;              // Indica se o jogador está desacelerando
+    private float lastRotation;               // Armazena o ï¿½ltimo ï¿½ngulo de rotaï¿½ï¿½o
+    private bool isDecelerating;              // Indica se o jogador estï¿½ desacelerando
 
     public void Awake()
     {
@@ -31,7 +31,7 @@ public class PlayerFollower : MonoBehaviour
 
     private void Update()
     {
-        // Controla a rotação do jogador com as teclas "A" e "D"
+        // Controla a rotaï¿½ï¿½o do jogador com as teclas "A" e "D"
         float rotationInput = 0;
         if (Input.GetKey(KeyCode.A))
         {
@@ -42,28 +42,28 @@ public class PlayerFollower : MonoBehaviour
             rotationInput = -1;
         }
 
-        // Aplica a rotação com base no input, independente de "W" estar ou não pressionado
+        // Aplica a rotaï¿½ï¿½o com base no input, independente de "W" estar ou nï¿½o pressionado
         rb.rotation += rotationInput * rotationSpeed * Time.deltaTime;
 
-        // Registra o ângulo atual como lastRotation se "W" está pressionado
+        // Registra o ï¿½ngulo atual como lastRotation se "W" estï¿½ pressionado
         if (Input.GetKey(KeyCode.W))
         {
             lastRotation = rb.rotation;
-            isDecelerating = false;  // Desativa desaceleração enquanto está acelerando
+            isDecelerating = false;  // Desativa desaceleraï¿½ï¿½o enquanto estï¿½ acelerando
         }
         else
         {
-            // Ativa o modo de desaceleração se "W" não está pressionado
+            // Ativa o modo de desaceleraï¿½ï¿½o se "W" nï¿½o estï¿½ pressionado
             isDecelerating = true;
         }
     }
 
     public void FixedUpdate()
     {
-        // Verifica se a tecla "W" está pressionada para definir o movimento
+        // Verifica se a tecla "W" estï¿½ pressionada para definir o movimento
         bool isAccelerating = Input.GetKey(KeyCode.W);
 
-        // Ajusta a velocidade atual com base na aceleração e desaceleração
+        // Ajusta a velocidade atual com base na aceleraï¿½ï¿½o e desaceleraï¿½ï¿½o
         if (isAccelerating)
         {
             currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed, acceleration * Time.fixedDeltaTime);
@@ -75,7 +75,7 @@ public class PlayerFollower : MonoBehaviour
             gravityVelocity += Vector2.down * gravity * Time.fixedDeltaTime;
         }
 
-        // Determina a direção de movimento: na direção da rotação atual ou da lastRotation
+        // Determina a direï¿½ï¿½o de movimento: na direï¿½ï¿½o da rotaï¿½ï¿½o atual ou da lastRotation
         Vector2 movement = Vector2.zero;
         if (isAccelerating)
         {
@@ -84,13 +84,13 @@ public class PlayerFollower : MonoBehaviour
         }
         else if (isDecelerating)
         {
-            // Calcula a direção baseada no último ângulo registrado (lastRotation)
+            // Calcula a direï¿½ï¿½o baseada no ï¿½ltimo ï¿½ngulo registrado (lastRotation)
             float radians = lastRotation * Mathf.Deg2Rad;
             Vector2 lastDirection = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
             movement = lastDirection * currentSpeed * Time.fixedDeltaTime;
         }
 
-        // Adiciona a gravidade ao movimento para que o jogador se mova para baixo quando não estiver acelerando
+        // Adiciona a gravidade ao movimento para que o jogador se mova para baixo quando nï¿½o estiver acelerando
         movement += gravityVelocity * Time.fixedDeltaTime;
 
         // Aplica o movimento ao jogador
