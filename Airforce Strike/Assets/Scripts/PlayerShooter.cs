@@ -129,7 +129,7 @@ public class PlayerShooter : MonoBehaviour
             if (cooldownTimer >= missleDelay)
             {
                 isReloading = false;
-                missileFill.color = Color.green; // Muda para verde quando a recarga está completa
+                missileFill.color = new Color32(34, 185, 34, 255); // Verde escuro (Forest Green)
             }
         }
     }
@@ -139,7 +139,7 @@ public class PlayerShooter : MonoBehaviour
         if (missileFill != null)
         {
             missileFill.fillAmount = 1; // Começa cheia
-            missileFill.color = Color.green; // Começa verde
+            missileFill.color = new Color32(34, 185, 34, 255); // Começa verde
         }
     }
 }

@@ -295,18 +295,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.16515473, g: 0.7075472, b: 0.130162, a: 1}
+  m_Color: {r: 0.0067139165, g: 0.7264151, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 7482667652216324306, guid: 7164f2783a2b53a479badbaeb4920740, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -332,11 +332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e23bfe067b9a384ca9d74984a615695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missileFill: {fileID: 372504376}
-  cooldownTime: 10
-  cooldownTimer: 0
-  isReloading: 0
-  fillRenderer: {fileID: 0}
 --- !u!1001 &408907707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1120,11 +1115,12 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6030800259249784379, guid: c603c071bd24dca49a1bd181cce775b6, type: 3}
   misslePrefab: {fileID: 6030800259249784379, guid: b7b85702d29c9fe4eac9643d8429b39e, type: 3}
   shootDelay: 0.1
-  missleDelay: 10
+  missleDelay: 5
   bulletSpeed: 60
   missleSpeed: 30
   maxHp: 5
   healthBar: {fileID: 1562435850}
+  missileFill: {fileID: 372504377}
 --- !u!68 &1475610696
 EdgeCollider2D:
   m_ObjectHideFlags: 0
