@@ -129,7 +129,7 @@ public class PlayerShooter : MonoBehaviour
             if (cooldownTimer >= missleDelay)
             {
                 isReloading = false;
-                missileFill.color = new Color32(34, 185, 34, 255); // Verde escuro (Forest Green)
+                missileFill.color = new Color32(34, 184, 34, 255); // Verde escuro (Forest Green)
             }
         }
     }
