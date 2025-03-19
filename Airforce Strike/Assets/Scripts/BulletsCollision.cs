@@ -16,6 +16,7 @@ public class DroneAI : MonoBehaviour
 
 
     void Start(){
+        gameObject.SetActive(false);
         if (isSpawnerDrone)
         {
             // Invisível e intangível
@@ -37,7 +38,7 @@ public class DroneAI : MonoBehaviour
     void Die()
     {
         OnDroneDeath?.Invoke(gameObject); // Notifica o Spawner
-        Destroy(gameObject); // Destroi o drone
+        gameObject.SetActive(false);
     }
 
     void Update()
