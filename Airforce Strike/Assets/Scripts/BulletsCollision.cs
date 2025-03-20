@@ -8,6 +8,7 @@ public class DroneAI : MonoBehaviour
     public bool isSpawnerDrone = false; // ✅ Definir no inspetor para o drone inicial
     [SerializeField] private Transform player;
     [SerializeField] private int enemyLife = 3; //vida dos drones
+    private bool isInvisible = false;
     [SerializeField] private float moveSpeed = 2f; // Velocidade dos drones
     [SerializeField] private float stopDistance = 3f; // Distância mínima para parar
     [SerializeField] private float evadeDistance = 1.5f; // Distância para tentar desviar
@@ -16,19 +17,63 @@ public class DroneAI : MonoBehaviour
 
 
     void Start(){
-        gameObject.SetActive(false);
         if (isSpawnerDrone)
         {
-            // Invisível e intangível
-            Renderer rend = GetComponent<Renderer>();
-            if (rend != null) rend.enabled = false;
-
-            Collider2D col2D = GetComponent<Collider2D>();
-            if (col2D != null) col2D.enabled = false;
-
-            Collider col = GetComponent<Collider>();
-            if (col != null) col.enabled = false;
+            MakeInvisible();
         }
+        else{
+            MakeVisible();
+        }
+    }
+
+    void MakeInvisible()
+    {
+        isInvisible = true; // Flag para evitar interações
+
+        // ✅ Desativa renderização
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = false;
+        }
+
+        // ✅ Desativa colisores
+        Collider2D col2D = GetComponent<Collider2D>();
+        if (col2D != null) col2D.enabled = false;
+
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+        
+
+        // ✅ Se o drone tiver IA ou tiro, desativa o script dele
+        DroneAI ai = GetComponent<DroneAI>(); // Substitua pelo nome correto do script de IA
+        if (ai != null) ai.enabled = false;
+
+        EnemyShooter shooter = GetComponent<EnemyShooter>(); // ✅ Desativa tiro
+        if (shooter != null) shooter.enabled = false;
+    }
+
+    public void MakeVisible()
+    {
+        isInvisible = false; // Flag para evitar interações
+
+        // ✅ Desativa renderização
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = true;
+        }
+
+        // ✅ Desativa colisores
+        Collider2D col2D = GetComponent<Collider2D>();
+        if (col2D != null) col2D.enabled = true;
+
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = true;
+
+        // ✅ Se o drone tiver IA ou tiro, desativa o script dele
+        DroneAI ai = GetComponent<DroneAI>(); // Substitua pelo nome correto do script de IA
+        if (ai != null) ai.enabled = true;
     }
     public void SetTarget(Transform playerTarget)
     {
@@ -37,8 +82,11 @@ public class DroneAI : MonoBehaviour
 
     void Die()
     {
-        OnDroneDeath?.Invoke(gameObject); // Notifica o Spawner
-        gameObject.SetActive(false);
+        if (!isSpawnerDrone) // ✅ Drone inicial não morre
+        {
+            OnDroneDeath?.Invoke(gameObject); // Notifica o Spawner
+            Destroy(gameObject); // Destroi o drone
+        }
     }
 
     void Update()
@@ -78,10 +126,22 @@ public class DroneAI : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullet") || other.CompareTag("Missile"))
+        if (isSpawnerDrone){
+           return; // ✅ Drone inicial não toma dano
+ 
+        }
+
+        if (other.CompareTag("Bullet"))
         {
             Destroy(other.gameObject);
             enemyLife -= 1;
+            if(enemyLife <= 0){
+                Die();
+            }
+        }
+        else if(other.CompareTag("Missile")){
+            Destroy(other.gameObject);
+            enemyLife -= 3;
             if(enemyLife <= 0){
                 Die();
             }

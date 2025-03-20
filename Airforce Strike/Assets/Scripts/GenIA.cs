@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class DroneSpawner : MonoBehaviour
 {
-
     [SerializeField] private GameObject dronePrefab; // Prefab do drone
     [SerializeField] private Transform player; // Referência ao jogador
     [SerializeField] private float spawnRadius = 5f; // Distância mínima do jogador
@@ -17,15 +16,7 @@ public class DroneSpawner : MonoBehaviour
     private List<GameObject> activeDrones = new List<GameObject>(); // Lista dos drones vivos
 
     void Start()
-    {   
-    
-        // Certifique-se de que o prefab do drone foi atribuído no Inspector.
-        if (dronePrefab == null)
-        {
-            Debug.LogError("Drone prefab is missing!");
-            return; // Saia do método se o prefab não estiver presente
-        }
-
+    {
         StartCoroutine(StartNextWave());
     }
 
@@ -35,55 +26,43 @@ public class DroneSpawner : MonoBehaviour
 
         dronesToSpawn = Mathf.RoundToInt(initialDroneCount * Mathf.Pow(difficultyMultiplier, currentWave - 1)); // Aumenta a dificuldade
         Debug.Log($"Iniciando Onda {currentWave} com {dronesToSpawn} drones!");
-        gameObject.SetActive(true);
+
         SpawnDrones(dronesToSpawn);
     }
 
     void SpawnDrones(int count)
+{
+    for (int i = 0; i < count; i++)
     {
-        for (int i = 0; i < count; i++)
+        Vector3 randomOffset = Random.insideUnitCircle.normalized * spawnRadius;
+        Vector3 spawnPosition = player.position + new Vector3(randomOffset.x, randomOffset.y, 0);
+
+        GameObject drone = Instantiate(dronePrefab, spawnPosition, Quaternion.identity);
+
+        DroneAI dAI = drone.GetComponent<DroneAI>();
+
+        if (dAI != null)
         {
-            
-            // Verifique se o prefab ainda existe antes de instanciar
-            if (dronePrefab != null)
-            {
-                Vector3 randomOffset = Random.insideUnitCircle.normalized * spawnRadius; // Posição aleatória
-                Vector3 spawnPosition = player.position + new Vector3(randomOffset.x, randomOffset.y, 0);
+            dAI.isSpawnerDrone = false; // ✅ Garante que os clones não sejam spawner
+            dAI.MakeVisible();
 
-                GameObject drone = Instantiate(dronePrefab, spawnPosition, Quaternion.identity);
-                activeDrones.Add(drone); // Adiciona à lista de drones vivos
-
-                // Adiciona um listener de morte ao drone (assumindo que ele tenha um EnemyHealth ou similar)
-                var droneAI = drone.GetComponent<DroneAI>();
-                if (droneAI != null)
-                {
-                    droneAI.OnDroneDeath += HandleDroneDeath;
-                }
-                else
-                {
-                    Debug.LogWarning("DroneAI component missing on the drone prefab.");
-                }
-            }
-            else
-            {
-                Debug.LogError("Drone prefab is missing, can't spawn drones.");
-                break; // Se o prefab estiver faltando, pare de tentar spawnar drones
-            }
+            EnemyShooter shooter = drone.GetComponent<EnemyShooter>();
+            if (shooter != null) shooter.enabled = true;
         }
+
+        activeDrones.Add(drone);
+        dAI.OnDroneDeath += HandleDroneDeath;
     }
+}
 
     void HandleDroneDeath(GameObject drone)
     {
-        // Verifica se o drone ainda está presente na lista antes de tentar removê-lo
-        if (drone != null)
-        {
-            activeDrones.Remove(drone); // Remove da lista quando o drone morre
+        activeDrones.Remove(drone); // Remove da lista quando o drone morre
 
-            if (activeDrones.Count == 0)
-            {
-                currentWave++; // Próxima onda
-                StartCoroutine(StartNextWave()); // Chama nova onda
-            }
+        if (activeDrones.Count == 0)
+        {
+            currentWave++; // Próxima onda
+            StartCoroutine(StartNextWave()); // Chama nova onda
         }
     }
 }
