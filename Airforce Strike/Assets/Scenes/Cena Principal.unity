@@ -397,7 +397,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -372.7, y: 154}
+  m_AnchoredPosition: {x: -682.9, y: 378.30002}
   m_SizeDelta: {x: 100, y: 54.6093}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &407119253
@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1600, y: 900}
   m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1025,7 +1025,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -1357,13 +1357,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 6030800259249784379, guid: c603c071bd24dca49a1bd181cce775b6, type: 3}
   misslePrefab: {fileID: 6030800259249784379, guid: b7b85702d29c9fe4eac9643d8429b39e, type: 3}
+  flamePrefab: {fileID: 0}
   shootDelay: 0.07
   missleDelay: 5
+  flameDelay: 10
   bulletSpeed: 40
   missleSpeed: 30
   maxHp: 5
   healthBar: {fileID: 1562435850}
   missileFill: {fileID: 372504377}
+  flameCount: 5
+  flameSpread: 0.5
+  flameLifetime: 1.5
+  flameFill: {fileID: 0}
 --- !u!68 &1475610696
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -1459,7 +1465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -333.5, y: 140}
+  m_AnchoredPosition: {x: -645, y: 364}
   m_SizeDelta: {x: 156.9553, y: 32.943}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1562435848
@@ -1547,7 +1553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -372.7, y: 133.6}
+  m_AnchoredPosition: {x: -682.9, y: 358.40005}
   m_SizeDelta: {x: 100, y: 54.6093}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1754254808
@@ -1990,7 +1996,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -321.52, y: 160.6}
+  m_AnchoredPosition: {x: -633.0201, y: 384.6}
   m_SizeDelta: {x: 156.9553, y: 32.9425}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2138868140
