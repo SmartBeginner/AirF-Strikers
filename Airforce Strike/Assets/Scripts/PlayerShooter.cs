@@ -9,10 +9,14 @@ public class PlayerShooter : MonoBehaviour
     private GameObject bulletPrefab;
     [SerializeField]
     private GameObject misslePrefab;
+    [SerializeField] 
+    private GameObject flamePrefab; // 🔥 Prefab das chamas
     [SerializeField]
     private float shootDelay = 0.5f;
     [SerializeField]
     private float missleDelay = 10.0f; // Delay do míssil (10 segundos)
+    [SerializeField]
+    private float flameDelay = 10.0f;
     [SerializeField]
     private float bulletSpeed = 10f;
     [SerializeField]
@@ -20,14 +24,21 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] private int maxHp = 3;
     [SerializeField] private HealthBar healthBar;
     [SerializeField] private Image missileFill; // 🔹 Barra de recarga UI
-
+    [SerializeField] private int flameCount = 5; // 🔥 Número de chamas
+    [SerializeField] private float flameSpread = 0.5f; // 🔥 Distância entre as chamas
+    [SerializeField] private float flameLifetime = 1.5f; // 🔥 Tempo de vida das chamas
+    [SerializeField] private Image flameFill;
     private bool isShooting = false;
     private float shootTimer = 0f;
     private float lastMissleTime = -10f;
+    private float lastFlameTime = -10f;
     private int hp;
 
     private bool isReloading = false;
     private float cooldownTimer = 0f;
+
+    private bool isReloadingFlame = false;
+    private float cooldownTimerFlame = 0f;
 
     private void Start()
     {
@@ -53,7 +64,11 @@ public class PlayerShooter : MonoBehaviour
             ShootMissle();
             lastMissleTime = Time.time;
         }
-
+        if (Input.GetKeyDown(KeyCode.J) && Time.time - lastFlameTime >= flameDelay && isReloadingFlame) // 🔥 Atira chamas ao pressionar J
+        {
+            ShootFlames();
+            lastFlameTime = Time.time;
+        }
         if (isShooting)
         {
             shootTimer += Time.deltaTime;
@@ -89,7 +104,15 @@ public class PlayerShooter : MonoBehaviour
             missleScript.SetSpeed(missleSpeed);
         }
     }
-
+    private void ShootFlames()
+    {
+        for (int i = 0; i < flameCount; i++)
+        {
+            Vector3 spawnPosition = transform.position - new Vector3(0, i * flameSpread, 0);
+            GameObject flame = Instantiate(flamePrefab, spawnPosition, Quaternion.identity);
+            Destroy(flame, flameLifetime); // 🔥 Destroi a chama após o tempo definido
+        }
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enmy Bullet"))
@@ -110,6 +133,9 @@ public class PlayerShooter : MonoBehaviour
         isReloading = true;
         cooldownTimer = 0f; // Reinicia o timer ao começar a recarga
         ResetBar();
+    }
+    private void StartReloadingFlame(){
+
     }
 
     private void UpdateReloadingBar()
