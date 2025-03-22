@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // 🔹 Necessário para manipular UI
+using UnityEngine.UI;
 
 public class PlayerShooter : MonoBehaviour
 {
@@ -10,33 +10,35 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField]
     private GameObject misslePrefab;
     [SerializeField] 
-    private GameObject flamePrefab; // 🔥 Prefab das chamas
+    private GameObject flamePrefab;
     [SerializeField]
     private float shootDelay = 0.5f;
     [SerializeField]
-    private float missleDelay = 10.0f; // Delay do míssil (10 segundos)
+    private float missleDelay = 10.0f;
     [SerializeField]
     private float flameDelay = 10.0f;
     [SerializeField]
     private float bulletSpeed = 10f;
     [SerializeField]
     private float missleSpeed = 15f;
+    [SerializeField]
+    private float flameSpeed = 10f;
     [SerializeField] private int maxHp = 3;
     [SerializeField] private HealthBar healthBar;
-    [SerializeField] private Image missileFill; // 🔹 Barra de recarga UI
-    [SerializeField] private int flameCount = 5; // 🔥 Número de chamas
-    [SerializeField] private float flameSpread = 0.5f; // 🔥 Distância entre as chamas
-    [SerializeField] private float flameLifetime = 1.5f; // 🔥 Tempo de vida das chamas
+    [SerializeField] private Image missileFill;
+    [SerializeField] private int flameCount = 5;
+    [SerializeField] private float flameSpread = 0.5f;
+    [SerializeField] private float flameLifetime = 5f;
+    [SerializeField] private float flameDeceleration = 2f; // 🔥 Taxa de desaceleração
     [SerializeField] private Image flameFill;
+    [SerializeField] private float flameSpawnDelay = 0.1f;
     private bool isShooting = false;
     private float shootTimer = 0f;
     private float lastMissleTime = -10f;
     private float lastFlameTime = -10f;
     private int hp;
-
     private bool isReloading = false;
     private float cooldownTimer = 0f;
-
     private bool isReloadingFlame = false;
     private float cooldownTimerFlame = 0f;
 
@@ -44,12 +46,12 @@ public class PlayerShooter : MonoBehaviour
     {
         hp = maxHp;
         healthBar.UpdateHealthBar(hp, maxHp);
-        ResetBar(); // Reseta a barra de recarga
+        ResetBar();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L) && !Input.GetKey(KeyCode.LeftShift))
         {
             ShootBullet();
             isShooting = true;
@@ -59,14 +61,14 @@ public class PlayerShooter : MonoBehaviour
             isShooting = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.K) && Time.time - lastMissleTime >= missleDelay && !isReloading)
+        if (Input.GetKeyDown(KeyCode.K) && Time.time - lastMissleTime >= missleDelay && !isReloading && !Input.GetKey(KeyCode.LeftShift))
         {
             ShootMissle();
             lastMissleTime = Time.time;
         }
-        if (Input.GetKeyDown(KeyCode.J) && Time.time - lastFlameTime >= flameDelay && isReloadingFlame) // 🔥 Atira chamas ao pressionar J
+        if (Input.GetKeyDown(KeyCode.J) && Time.time - lastFlameTime >= flameDelay && !isReloadingFlame && !Input.GetKey(KeyCode.LeftShift))
         {
-            ShootFlames();
+            StartCoroutine(ShootFlames());
             lastFlameTime = Time.time;
         }
         if (isShooting)
@@ -78,8 +80,7 @@ public class PlayerShooter : MonoBehaviour
                 shootTimer = 0f;
             }
         }
-
-        UpdateReloadingBar(); // Atualiza a barra de recarga a cada frame
+        UpdateReloadingBar();
     }
 
     private void ShootBullet()
@@ -96,23 +97,43 @@ public class PlayerShooter : MonoBehaviour
     {
         GameObject missle = Instantiate(misslePrefab, transform.position, transform.rotation);
         Missile missleScript = missle.GetComponent<Missile>();
-
-        StartReloading(); // Inicia a recarga visual
-
+        StartReloading();
         if (missleScript != null)
         {
             missleScript.SetSpeed(missleSpeed);
         }
     }
-    private void ShootFlames()
+
+    private IEnumerator ShootFlames()
     {
+        StartReloadingFlame();
         for (int i = 0; i < flameCount; i++)
         {
-            Vector3 spawnPosition = transform.position - new Vector3(0, i * flameSpread, 0);
-            GameObject flame = Instantiate(flamePrefab, spawnPosition, Quaternion.identity);
-            Destroy(flame, flameLifetime); // 🔥 Destroi a chama após o tempo definido
+            Vector3 spawnPosition = transform.position;
+            float randomAngle = Random.Range(-75f, 75f);
+            Quaternion rotation = Quaternion.Euler(0, 0, transform.eulerAngles.z + 180 + randomAngle);
+            GameObject flame = Instantiate(flamePrefab, spawnPosition, rotation);
+            Rigidbody2D rb = flame.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = rotation * Vector2.up * flameSpeed;
+                StartCoroutine(SlowDownFlame(rb)); // 🔥 Inicia a desaceleração da chama
+            }
+            Destroy(flame, flameLifetime);
+            yield return new WaitForSeconds(flameSpawnDelay);
         }
     }
+
+    private IEnumerator SlowDownFlame(Rigidbody2D rb)
+    {
+        while (rb.linearVelocity.magnitude > 0.1f)
+        {
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.deltaTime * flameDeceleration);
+            yield return null;
+        }
+        rb.linearVelocity = Vector2.zero;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enmy Bullet"))
@@ -127,35 +148,43 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
-    // Lógica da Barra de Recarga UI
     private void StartReloading()
     {
         isReloading = true;
-        cooldownTimer = 0f; // Reinicia o timer ao começar a recarga
+        cooldownTimer = 0f;
         ResetBar();
     }
-    private void StartReloadingFlame(){
-
+    private void StartReloadingFlame()
+    {
+        isReloadingFlame = true;
+        cooldownTimerFlame = 0f;
+        ResetBarFlame();
     }
 
     private void UpdateReloadingBar()
     {
         if (isReloading && missileFill != null)
         {
-            cooldownTimer += Time.deltaTime; // Incrementa o tempo de recarga
-            float progress = cooldownTimer / missleDelay; // Sincroniza com o tempo de missleDelay (10 segundos)
-
-            // Garante que o valor do progresso não ultrapasse 1
-            progress = Mathf.Clamp01(progress);
-
-            missileFill.fillAmount = progress; // Atualiza a barra de UI com o progresso
-
-            missileFill.color = Color.gray; // Sempre cinza enquanto recarrega
-
+            cooldownTimer += Time.deltaTime;
+            float progress = Mathf.Clamp01(cooldownTimer / missleDelay);
+            missileFill.fillAmount = progress;
+            missileFill.color = Color.gray;
             if (cooldownTimer >= missleDelay)
             {
                 isReloading = false;
-                missileFill.color = new Color32(34, 185, 34, 255); // Verde escuro (Forest Green)
+                missileFill.color = new Color32(34, 185, 34, 255);
+            }
+        }
+        if (isReloadingFlame && flameFill != null)
+        {
+            cooldownTimerFlame += Time.deltaTime;
+            float progress = Mathf.Clamp01(cooldownTimerFlame / flameDelay);
+            flameFill.fillAmount = progress;
+            flameFill.color = Color.gray;
+            if (cooldownTimerFlame >= flameDelay)
+            {
+                isReloadingFlame = false;
+                flameFill.color = new Color32(224, 140, 16, 255);
             }
         }
     }
@@ -164,8 +193,16 @@ public class PlayerShooter : MonoBehaviour
     {
         if (missileFill != null)
         {
-            missileFill.fillAmount = 1; // Começa cheia
-            missileFill.color = new Color32(34, 185, 34, 255); // Começa verde
+            missileFill.fillAmount = 1;
+            missileFill.color = new Color32(34, 185, 34, 255);
+        }
+    }
+    private void ResetBarFlame()
+    {
+        if (flameFill != null)
+        {
+            flameFill.fillAmount = 1;
+            flameFill.color = new Color32(224, 140, 16, 255);
         }
     }
 }
