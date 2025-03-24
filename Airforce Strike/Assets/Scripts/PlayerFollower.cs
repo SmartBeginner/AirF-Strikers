@@ -23,7 +23,7 @@ public class PlayerFollower : MonoBehaviour
 
     public Rigidbody2D rb;
     private float currentSpeed = 0f;
-    private bool isGrounded = false;
+
     private Vector2 gravityVelocity;
     private float lastRotation;
     private bool isDecelerating;

@@ -5,17 +5,22 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField]
-    private float lifetime = 1f;            // Tempo de vida da bala em segundos
+    private float lifetime = 3f; // Tempo de vida da bala em segundos
+    
+    [SerializeField]
+    private float directionChangeTime = 0.0001f; // Tempo antes de mudar de direção aleatoriamente
 
-    private float speed;                    // Velocidade da bala
+    private float speed; // Velocidade da bala
+    private float timeElapsed = 0f;
+    private bool directionChanged = false;
+    private Vector2 direction;
 
     private void Start()
     {
-        // Destroi a bala ap�s o tempo de vida especifico
         Destroy(gameObject, lifetime);
+        direction = transform.right; // Define a direção inicial da bala
     }
 
-    // Configura a velocidade da bala (chamado pelo script do jogador)
     public void SetSpeed(float newSpeed)
     {
         speed = newSpeed;
@@ -23,13 +28,20 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        // Move a bala na dire��o em que est� apontando
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        timeElapsed += Time.deltaTime;
+        
+        if (!directionChanged)
+        {
+            directionChanged = true;
+            float angleOffset = Random.Range(-2f, 2f); // Escolhe um ângulo aleatório entre -15 e 15 graus
+            direction = Quaternion.Euler(0, 0, angleOffset) * direction; // Aplica a rotação na direção
+        }
+        transform.position += (Vector3)(direction * speed * Time.deltaTime);
+        transform.localScale += Vector3.one * 2 * Time.deltaTime; // Aumenta o tamanho da bala com o tempo
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Se colidir com qualquer coisa que n�o seja o jogador, destr�i a bala
         if (!collision.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);

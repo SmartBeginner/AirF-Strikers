@@ -7,6 +7,7 @@ public class PlayerShooter : MonoBehaviour
 {
     [SerializeField]
     private GameObject bulletPrefab;
+    public bool isGrounded = false;
     [SerializeField]
     private GameObject misslePrefab;
     [SerializeField] 
@@ -23,6 +24,9 @@ public class PlayerShooter : MonoBehaviour
     private float missleSpeed = 15f;
     [SerializeField]
     private float flameSpeed = 10f;
+    [SerializeField]
+    private Transform ponta;
+
     [SerializeField] private int maxHp = 3;
     [SerializeField] private HealthBar healthBar;
     [SerializeField] private Image missileFill;
@@ -50,7 +54,13 @@ public class PlayerShooter : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   
+        if(isGrounded)
+        {
+            hp = 0;
+            healthBar.UpdateHealthBar(hp, maxHp);
+            Destroy(gameObject);
+        }
         if (Input.GetKeyDown(KeyCode.L) && !Input.GetKey(KeyCode.LeftShift))
         {
             ShootBullet();
@@ -84,8 +94,8 @@ public class PlayerShooter : MonoBehaviour
     }
 
     private void ShootBullet()
-    {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+    {   
+        GameObject bullet = Instantiate(bulletPrefab, ponta.position, ponta.rotation);
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
