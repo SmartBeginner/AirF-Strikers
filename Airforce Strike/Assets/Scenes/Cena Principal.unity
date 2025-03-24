@@ -391,8 +391,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.178, y: 0.24200001}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 41.36, y: 8.23}
-  m_SizeDelta: {x: 160.926, y: 35.703}
+  m_AnchoredPosition: {x: 41.36, y: 9.332}
+  m_SizeDelta: {x: 160.926, y: 37.907}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &372504377
 MonoBehaviour:
@@ -1239,7 +1239,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 1
+  m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -1577,7 +1577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73fea70429c705141be2e9c76c7e5cef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6030800259249784379, guid: 46843c0ed0c3647568af553041cc3483, type: 3}
+  bulletPrefab: {fileID: 6030800259249784379, guid: f32e3a59d74cbb0438d1367901e42b32, type: 3}
   isGrounded: 0
   misslePrefab: {fileID: 6030800259249784379, guid: b7b85702d29c9fe4eac9643d8429b39e, type: 3}
   flamePrefab: {fileID: 6030800259249784379, guid: f22f426bced5546feb136832d9a6e849, type: 3}
