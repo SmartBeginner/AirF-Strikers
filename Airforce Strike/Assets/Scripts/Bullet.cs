@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
             direction = Quaternion.Euler(0, 0, angleOffset) * direction; // Aplica a rotação na direção
         }
         transform.position += (Vector3)(direction * speed * Time.deltaTime);
-        transform.localScale += Vector3.one * 2 * Time.deltaTime; // Aumenta o tamanho da bala com o tempo
+        transform.localScale += Vector3.one * 3 * Time.deltaTime; // Aumenta o tamanho da bala com o tempo
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -14,7 +14,8 @@ public class DroneAI : MonoBehaviour
     [SerializeField] private float evadeDistance = 1.5f; // Distância para tentar desviar
     [SerializeField] private float separationDistance = 1f; // Distância mínima entre drones
     [SerializeField] private LayerMask enemyLayer; // Camada dos inimigos
-
+        [SerializeField] private float tiltAngle = 10f; // Inclinação máxima
+        [SerializeField] private float tiltSpeed = 5f; // Velocidade da rotação
 
     void Start(){
         if (isSpawnerDrone)
@@ -89,7 +90,7 @@ public class DroneAI : MonoBehaviour
         }
     }
 
-    void Update()
+     void Update()
     {
         if (player == null) return;
 
@@ -105,10 +106,16 @@ public class DroneAI : MonoBehaviour
             transform.position -= direction * moveSpeed * Time.deltaTime;
         }
 
-        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        //transform.rotation = Quaternion.Euler(0, 0, angle);
-
+        TiltDrone(direction.x);
         AvoidOtherDrones();
+    }
+
+
+    void TiltDrone(float horizontalMovement)
+    {
+        float targetTilt = -horizontalMovement * tiltAngle;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, targetTilt);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * tiltSpeed);
     }
 
     void AvoidOtherDrones()

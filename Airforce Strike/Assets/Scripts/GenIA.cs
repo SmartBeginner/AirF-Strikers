@@ -17,6 +17,7 @@ public class DroneSpawner : MonoBehaviour
 
     void Start()
     {
+        SpawnDrones(dronesToSpawn);
         StartCoroutine(StartNextWave());
     }
 
