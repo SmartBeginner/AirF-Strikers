@@ -10,11 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3964907689614989026}
   - component: {fileID: 4071228168615836248}
-  - component: {fileID: -5400758186074115898}
-  - component: {fileID: 3702483483803158260}
+  - component: {fileID: 182445063044562994}
+  - component: {fileID: 760911977883404021}
+  - component: {fileID: -2726757248146293767}
+  - component: {fileID: 4155280377898879263}
   m_Layer: 0
-  m_Name: Flames
-  m_TagString: Bullet
+  m_Name: MissileF7
+  m_TagString: Missile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,18 +80,40 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.9006772, g: 1, b: 0.4392157, a: 1}
+  m_Sprite: {fileID: -4232237533888967103, guid: 233f42f1deaba2145b61ab6668349e1e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 0.09375}
+  m_Size: {x: 0.25, y: 0.11}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &-5400758186074115898
+--- !u!95 &182445063044562994
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030800259249784379}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: -8023223309533388240, guid: 233f42f1deaba2145b61ab6668349e1e, type: 3}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!50 &760911977883404021
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -116,7 +140,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &3702483483803158260
+--- !u!61 &-2726757248146293767
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,15 +174,34 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0025024414, y: 0}
+  m_Offset: {x: 0.034999996, y: 0.065}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.2, y: 0.2}
-    newSize: {x: 1, y: 0.09375}
+    pivot: {x: 0.35999998, y: -0.09090909}
+    oldSize: {x: 0.25, y: 0.11}
+    newSize: {x: 0.25, y: 0.11}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.640625, y: 0.0546875}
+  m_Size: {x: 0.25, y: 0.11}
   m_EdgeRadius: 0
+--- !u!114 &4155280377898879263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030800259249784379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04afb19590a8e7541a0b84d7a53bc883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifetime: 5
+  speed: 15
+  turnSpeed: 400
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  targetMarkerPrefab: {fileID: 6030800259249784379, guid: e8f99c1aa96c7b4478cacd30eba15e9e, type: 3}
