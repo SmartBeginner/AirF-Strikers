@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class DroneSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject dronePrefab; // Prefab do drone
-    [SerializeField] private Transform player; // Referência ao jogador
+    private Transform playerRef; // Referência ao jogador
+    [SerializeField] private GameObject playerPrefab; // Prefab do jogador
     [SerializeField] private float spawnRadius = 5f; // Distância mínima do jogador
     [SerializeField] private float timeBetweenWaves = 5f; // Tempo entre as ondas
     [SerializeField] private int initialDroneCount = 3; // Número inicial de drones por onda
@@ -17,6 +18,7 @@ public class DroneSpawner : MonoBehaviour
 
     void Start()
     {
+        SpawnPlayer(playerPrefab);
         SpawnDrones(dronesToSpawn);
         StartCoroutine(StartNextWave());
     }
@@ -31,12 +33,19 @@ public class DroneSpawner : MonoBehaviour
         SpawnDrones(dronesToSpawn);
     }
 
+    void SpawnPlayer(GameObject playerPrefab)
+    {
+        GameObject player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        playerRef = player.transform;
+    }
+
+
     void SpawnDrones(int count)
-{
+{  
     for (int i = 0; i < count; i++)
     {
         Vector3 randomOffset = Random.insideUnitCircle.normalized * spawnRadius;
-        Vector3 spawnPosition = player.position + new Vector3(randomOffset.x, randomOffset.y, 0);
+        Vector3 spawnPosition = playerRef.position + new Vector3(randomOffset.x, randomOffset.y, 0);
 
         GameObject drone = Instantiate(dronePrefab, spawnPosition, Quaternion.identity);
 

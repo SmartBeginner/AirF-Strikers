@@ -17,20 +17,15 @@ public class Missile : MonoBehaviour
 
     private static Transform target;
     private static GameObject targetMarker;
-    private static bool isMissileFired = false;
 
     private void Awake()
     {
-        if (target == null)
-        {
-            FindNearestEnemy();
-        }
+        StartCoroutine(TargetUpdateRoutine());
     }
 
     private void Start()
     {
         Destroy(gameObject, lifetime);
-        StartCoroutine(TargetUpdateRoutine());
     }
 
     public void SetSpeed(float newSpeed)
@@ -54,10 +49,7 @@ public class Missile : MonoBehaviour
     {
         while (true)
         {
-            if (!isMissileFired)
-            {
-                FindNearestEnemy();
-            }
+            FindNearestEnemy();
             yield return new WaitForSeconds(5f);
         }
     }
@@ -104,7 +96,6 @@ public class Missile : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Destroy(collision.gameObject);
-            isMissileFired = false;
         }
     }
 }

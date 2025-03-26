@@ -5,16 +5,24 @@ public class EnemyShooter : MonoBehaviour
 {
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private Transform target;
     [SerializeField] private float minFireRate = 2f;
     [SerializeField] private float maxFireRate = 5f;
     [SerializeField] private int shotsPerBurst = 3;
     [SerializeField] private float burstInterval = 0.3f;
     [SerializeField] private float projectileSpeed = 5f;
+    private Transform target;
+    private float searchInterval = 0.0001f;
+    private float searchTimer = 0f;
 
     private void Start()
     {
         StartCoroutine(ShootingRoutine());
+        FindClosestPlayer();
+    }
+
+    private void Update()
+    {
+            FindClosestPlayer();;
     }
 
     private IEnumerator ShootingRoutine()
@@ -48,5 +56,23 @@ public class EnemyShooter : MonoBehaviour
                 rb.linearVelocity = direction * projectileSpeed;
             }
         }
+    }
+
+    private void FindClosestPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        float closestDistance = Mathf.Infinity;
+        Transform closestPlayer = null;
+
+        foreach (GameObject p in players)
+        {
+            float distance = Vector3.Distance(transform.position, p.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestPlayer = p.transform;
+            }
+        }
+        target = closestPlayer;
     }
 }

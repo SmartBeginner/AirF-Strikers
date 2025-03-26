@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] 
     private Transform playerTransform;
     [SerializeField]
     private float followDistance = 3f;            // Distância fixa à frente do jogador ao acelerar
@@ -32,6 +32,17 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+            // playerTransform = player.transform;
+         //playerFollower = player.GetComponent<PlayerFollower>();
+        if (playerFollower == null)
+        {
+            Debug.LogError("PlayerFollower não encontrado no Player!");
+        }
+        else
+        {
+            Debug.Log("PlayerFollower encontrado!");
+        }
+        Debug.Log(playerFollower);
         // Inicializa a posição alvo da câmera e o valor inicial do Smooth Speed
         targetPosition = transform.position;
         currentSmoothSpeed = initialCameraSmoothSpeed;
@@ -46,7 +57,9 @@ public class CameraController : MonoBehaviour
         if (isAccelerating)
         {
             // Define a posição da câmera a uma distância fixa à frente do jogador
+            
             Vector2 playerPosition = playerFollower.getRBPos();
+            Debug.Log("Player Position: " + playerPosition);
             targetPosition = playerPosition - (Vector2)playerTransform.right * followDistance;
 
             // Inicia a aceleração gradual do Smooth Speed se "W" acabou de ser pressionado
@@ -87,5 +100,8 @@ public class CameraController : MonoBehaviour
         // Move a câmera suavemente para a posição alvo calculada no eixo X e Y
         Vector2 smoothedPosition = Vector2.Lerp((Vector2)transform.position, targetPosition, currentSmoothSpeed * Time.fixedDeltaTime);
         transform.position = new Vector3(smoothedPosition.x, smoothedPosition.y, transform.position.z);
+
+        Debug.Log($"PlayerFollower: {playerFollower}, RB Pos: {playerFollower?.getRBPos()}");
+
     }
 }

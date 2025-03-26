@@ -9,25 +9,23 @@ public class PlayerFollower : MonoBehaviour
     [SerializeField]
     private float acceleration = 5f;
     [SerializeField]
-    private float deceleration = 5f;
+    private float deceleration = 1f; // Reduzi para desacelerar suavemente
     [SerializeField]
     private float rotationSpeed = 100f;
     [SerializeField]
-    private float rotationAcceleration = 50f; // Aceleração do giro
+    private float rotationAcceleration = 50f;
     [SerializeField]
-    private float rotationDeceleration = 50f; // Desaceleração do giro
+    private float rotationDeceleration = 50f;
     [SerializeField]
     private float gravity = 2f;
     [SerializeField]
-    private float customDecelerationSpeed = 2f;
+    private float gravityReductionRate = 0.5f;
 
     public Rigidbody2D rb;
-    private float currentSpeed = 0f;
-
+    private Vector2 currentVelocity = Vector2.zero;
     private Vector2 gravityVelocity;
     private float lastRotation;
-    private bool isDecelerating;
-    private float currentRotationSpeed = 100f; // Velocidade atual da rotação
+    private float currentRotationSpeed = 100f;
 
     public void Awake()
     {
@@ -67,56 +65,38 @@ public class PlayerFollower : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             lastRotation = rb.rotation;
-            isDecelerating = false;
-        }
-        else
-        {
-            isDecelerating = true;
         }
     }
 
     public void FixedUpdate()
     {
         bool isAccelerating = Input.GetKey(KeyCode.W);
+        Vector2 desiredVelocity = currentVelocity;
 
         if (isAccelerating)
         {
+            Vector2 targetDirection = transform.right;
+            float targetSpeed = maxSpeed;
+
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed + 30, (acceleration + 20) * Time.fixedDeltaTime);
-                gravityVelocity = Vector2.zero;
+                targetSpeed += 30;
             }
-            else
+
+            desiredVelocity = Vector2.Lerp(currentVelocity, targetDirection * targetSpeed, acceleration * Time.fixedDeltaTime);
+            gravityVelocity = Vector2.MoveTowards(gravityVelocity, Vector2.zero, gravityReductionRate * Time.fixedDeltaTime);
+        }
+        else
+        {
+            desiredVelocity = Vector2.Lerp(currentVelocity, Vector2.zero, deceleration * Time.fixedDeltaTime);
+            if (gravityVelocity.y > -10)
             {
-                if (currentSpeed > 20)
-                {
-                    currentSpeed = 18;
-                }
-                currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed, acceleration * Time.fixedDeltaTime);
-                gravityVelocity = Vector2.zero;
+                gravityVelocity += Vector2.down * gravity * Time.fixedDeltaTime;
             }
         }
-        else if (isDecelerating)
-        {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, 0, customDecelerationSpeed * Time.fixedDeltaTime);
-            gravityVelocity += Vector2.down * gravity * Time.fixedDeltaTime;
-        }
 
-        Vector2 movement = Vector2.zero;
-        if (isAccelerating)
-        {
-            Vector2 rightDirection = transform.right;
-            movement = rightDirection * currentSpeed * Time.fixedDeltaTime;
-        }
-        else if (isDecelerating)
-        {
-            float radians = lastRotation * Mathf.Deg2Rad;
-            Vector2 lastDirection = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-            movement = lastDirection * currentSpeed * Time.fixedDeltaTime;
-        }
-
-        movement += gravityVelocity * Time.fixedDeltaTime;
-
+        currentVelocity = desiredVelocity;
+        Vector2 movement = currentVelocity * Time.fixedDeltaTime + gravityVelocity * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + movement);
     }
 
