@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DroneSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject dronePrefab; // Prefab do drone
+    [SerializeField] private GameObject droneTankPrefab;
     [SerializeField]private Transform playerRef; // Referência ao jogador
     [SerializeField] private GameObject playerPrefab; // Prefab do jogador
     [SerializeField] private float spawnRadius = 5f; // Distância mínima do jogador
@@ -61,6 +62,9 @@ public class DroneSpawner : MonoBehaviour
         Vector3 spawnPosition = playerRef.position + new Vector3(positionX, positionY, 0);
 
         GameObject drone = Instantiate(dronePrefab, spawnPosition, Quaternion.identity);
+        if(i % 15 == 0){
+            GameObject droneTank = Instantiate(droneTankPrefab, spawnPosition, Quaternion.identity);
+        }
 
         DroneAI dAI = drone.GetComponent<DroneAI>();
 
@@ -73,6 +77,7 @@ public class DroneSpawner : MonoBehaviour
             if (shooter != null) shooter.enabled = true;
         }
 
+        activeDrones.Add(drone);
         activeDrones.Add(drone);
         dAI.OnDroneDeath += HandleDroneDeath;
     }
