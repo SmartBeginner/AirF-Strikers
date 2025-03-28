@@ -50,7 +50,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: e5bb421ebe2e64c2fbbcf65dd03979aa, type: 2}
+    m_Motion: {fileID: 7400000, guid: fffaa1773013b49ccbddc19d645c71fe, type: 2}
     m_Threshold: -20
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -58,7 +58,7 @@ BlendTree:
     m_DirectBlendParameter: RelativeX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 8f34e932e7f7e4e749830a1bc16e18ed, type: 2}
+    m_Motion: {fileID: 7400000, guid: 03e8d705f807d40c093692fa4c8cdfdd, type: 2}
     m_Threshold: -10
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -74,22 +74,22 @@ BlendTree:
     m_DirectBlendParameter: RelativeX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 03e8d705f807d40c093692fa4c8cdfdd, type: 2}
-    m_Threshold: 1
+    m_Motion: {fileID: 7400000, guid: 8f34e932e7f7e4e749830a1bc16e18ed, type: 2}
+    m_Threshold: 10
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: RelativeX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: fffaa1773013b49ccbddc19d645c71fe, type: 2}
+    m_Motion: {fileID: 7400000, guid: e5bb421ebe2e64c2fbbcf65dd03979aa, type: 2}
     m_Threshold: 20
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: RelativeX
     m_Mirror: 0
-  m_BlendParameter: RelativeX
+  m_BlendParameter: relatX
   m_BlendParameterY: Blend
   m_MinThreshold: -20
   m_MaxThreshold: 20
@@ -105,7 +105,7 @@ AnimatorController:
   m_Name: DroneTank
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: RelativeX
+  - m_Name: relatX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0

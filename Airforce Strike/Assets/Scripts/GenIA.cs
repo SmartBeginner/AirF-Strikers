@@ -38,7 +38,7 @@ public class DroneSpawner : MonoBehaviour
 
     void SpawnDrones(int count)
 {  
-    for (int i = 0; i < count; i++)
+    for (int i = 1; i <= count; i++)
     {
         Vector3 randomOffset = Random.insideUnitCircle.normalized * spawnRadius;
         float positionX = randomOffset.x;
@@ -62,11 +62,27 @@ public class DroneSpawner : MonoBehaviour
         Vector3 spawnPosition = playerRef.position + new Vector3(positionX, positionY, 0);
 
         GameObject drone = Instantiate(dronePrefab, spawnPosition, Quaternion.identity);
-        if(i % 15 == 0){
+        int j = i % 15;
+        if(j == 0){
+            Debug.Log("Numero de drones tank: "+ j);
             GameObject droneTank = Instantiate(droneTankPrefab, spawnPosition, Quaternion.identity);
+            DroneAI dtAI = droneTank.GetComponent<DroneAI>();
+
+            if (dtAI != null)
+            {
+                dtAI.isSpawnerDrone = false; // ✅ Garante que os clones não sejam spawner
+                dtAI.MakeVisible();
+
+                EnemyShooter shooter = drone.GetComponent<EnemyShooter>();
+                if (shooter != null) shooter.enabled = true;
+            }
+
+            activeDrones.Add(droneTank);
+            dtAI.OnDroneDeath += HandleDroneDeath;
         }
 
         DroneAI dAI = drone.GetComponent<DroneAI>();
+        
 
         if (dAI != null)
         {
@@ -77,7 +93,6 @@ public class DroneSpawner : MonoBehaviour
             if (shooter != null) shooter.enabled = true;
         }
 
-        activeDrones.Add(drone);
         activeDrones.Add(drone);
         dAI.OnDroneDeath += HandleDroneDeath;
     }

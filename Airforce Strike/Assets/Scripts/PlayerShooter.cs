@@ -153,6 +153,7 @@ public class PlayerShooter : MonoBehaviour
             healthBar.UpdateHealthBar(hp, maxHp);
             if (hp <= 0)
             {
+                RetryManager.TriggerGameOver();
                 Destroy(gameObject);
             }
             Destroy(other.gameObject);
