@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class DroneAI : MonoBehaviour
 {
@@ -18,6 +19,15 @@ public class DroneAI : MonoBehaviour
     private float searchInterval = 0f;
     private float searchTimer = 0f;
 
+
+    private T GetChildComponentByName<T>(string name) where T : Component {
+        foreach (T component in GetComponentsInChildren<T>(true)) {
+            if (component.gameObject.name == name) {
+                return component;
+            }
+        }
+        return null;
+    }
     void Start()
     {
         if (isSpawnerDrone)
@@ -116,6 +126,7 @@ public class DroneAI : MonoBehaviour
 
     void Die()
     {
+        ScoreManager.instance.UpdateScore(10);
         if (!isSpawnerDrone)
         {
             OnDroneDeath?.Invoke(gameObject);

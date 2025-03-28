@@ -59,7 +59,7 @@ public class CameraController : MonoBehaviour
             // Define a posição da câmera a uma distância fixa à frente do jogador
             
             Vector2 playerPosition = playerFollower.getRBPos();
-            Debug.Log("Player Position: " + playerPosition);
+            //Debug.Log("Player Position: " + playerPosition);
             targetPosition = playerPosition - (Vector2)playerTransform.right * followDistance;
 
             // Inicia a aceleração gradual do Smooth Speed se "W" acabou de ser pressionado
@@ -101,7 +101,7 @@ public class CameraController : MonoBehaviour
         Vector2 smoothedPosition = Vector2.Lerp((Vector2)transform.position, targetPosition, currentSmoothSpeed * Time.fixedDeltaTime);
         transform.position = new Vector3(smoothedPosition.x, smoothedPosition.y, transform.position.z);
 
-        Debug.Log($"PlayerFollower: {playerFollower}, RB Pos: {playerFollower?.getRBPos()}");
+        //Debug.Log($"PlayerFollower: {playerFollower}, RB Pos: {playerFollower?.getRBPos()}");
 
     }
 }
