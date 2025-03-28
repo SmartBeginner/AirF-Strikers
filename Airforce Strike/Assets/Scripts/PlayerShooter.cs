@@ -30,6 +30,7 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] private int maxHp = 3;
     [SerializeField] private HealthBar healthBar;
     [SerializeField] private Image missileFill;
+
     [SerializeField] private int flameCount = 5;
     [SerializeField] private float flameSpread = 0.5f;
     [SerializeField] private float flameLifetime = 5f;
