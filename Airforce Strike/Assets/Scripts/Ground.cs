@@ -21,6 +21,7 @@ public class Ground : MonoBehaviour
             PlayerShooter player = collision.GetComponent<PlayerShooter>();
             if (player != null)
             {
+                RetryManager.TriggerGameOver();
                 player.isGrounded = false;
             }
         }
